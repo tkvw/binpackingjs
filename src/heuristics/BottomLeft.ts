@@ -1,4 +1,4 @@
-import { Rect } from "../Box";
+import type { Rect } from "../Box";
 import Score from "../Score";
 import Base from "./Base";
 

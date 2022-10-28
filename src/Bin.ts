@@ -1,5 +1,5 @@
 import Box, { Rect } from "./Box";
-import { Heuristic } from "./heuristics/Base";
+import type { Heuristic } from "./heuristics/Base";
 import BestShortSideFit from "./heuristics/BestShortSideFit";
 
 export default class Bin {

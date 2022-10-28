@@ -1,0 +1,14 @@
+{
+  "include": ["./src", "test"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "outDir": "./",
+    "allowJs": false,
+    "declaration": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "target": "es2017",
+    "importsNotUsedAsValues": "error",
+    "sourceMap": true
+  }
+}

@@ -3,8 +3,8 @@
 // # bin_2   0     5     0
 // # bin_3   9    100    0
 // # ...
-import Bin from "./Bin";
-import Box from "./Box";
+import type Bin from "./Bin";
+import type Box from "./Box";
 import ScoreBoardEntry from "./ScoreBoardEntry";
 
 export default class ScoreBoard {

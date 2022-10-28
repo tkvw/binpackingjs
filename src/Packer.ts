@@ -1,8 +1,8 @@
-import Bin from "./Bin";
-import Box from "./Box";
+import type Bin from "./Bin";
+import type Box from "./Box";
 import Score from "./Score";
 import ScoreBoard from "./ScoreBoard";
-import ScoreBoardEntry from "./ScoreBoardEntry";
+import type ScoreBoardEntry from "./ScoreBoardEntry";
 
 export default class Packer {
   bins: Bin[];

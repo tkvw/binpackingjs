@@ -1,4 +1,5 @@
-import Box, { Rect } from "../Box";
+import type Box from "../Box";
+import type { Rect } from "../Box";
 import Score from "../Score";
 
 export interface Heuristic {

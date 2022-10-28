@@ -1,6 +1,6 @@
-import Bin from "./Bin";
-import Box from "./Box";
-import Score from "./Score";
+import type Bin from "./Bin";
+import type Box from "./Box";
+import type Score from "./Score";
 
 export default class ScoreBoardEntry {
   score: Score;
