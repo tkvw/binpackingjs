@@ -1,8 +1,12 @@
-import Score from '../Score';
+import Box, { Rect } from "../Box";
+import Score from "../Score";
 
-export default class Base {
-
-  findPositionForNewNode(box, freeRects) {
+export interface Heuristic {
+  findPositionForNewNode(box: Box, freeRects: Rect[]): Score;
+  calculateScore(freeRect: Rect, rectWidth: number, rectHeight: number): Score;
+}
+export default abstract class Base implements Heuristic {
+  findPositionForNewNode(box: Box, freeRects: Rect[]) {
     let bestScore = new Score();
     let width = box.width;
     let height = box.height;
@@ -17,7 +21,13 @@ export default class Base {
     return bestScore;
   }
 
-  tryPlaceRectIn(freeRect, box, rectWidth, rectHeight, bestScore) {
+  tryPlaceRectIn(
+    freeRect: Rect,
+    box: Box,
+    rectWidth: number,
+    rectHeight: number,
+    bestScore
+  ) {
     if (freeRect.width >= rectWidth && freeRect.height >= rectHeight) {
       let score = this.calculateScore(freeRect, rectWidth, rectHeight);
       if (score < bestScore) {
@@ -31,8 +41,9 @@ export default class Base {
     }
   }
 
-  calculateScore(freeRect, rectWidth, rectHeight) {
-    throw "NotImplementedError";
-  }
-
+  abstract calculateScore(
+    freeRect: Rect,
+    rectWidth: number,
+    rectHeight: number
+  ): Score;
 }

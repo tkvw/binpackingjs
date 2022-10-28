@@ -1,5 +1,4 @@
-binpackingjs
-------------
+## binpackingjs
 
 [![Build Status](https://api.travis-ci.org/olragon/binpackingjs.svg?branch=master)](https://travis-ci.org/olragon/binpackingjs)
 [![npm version](http://img.shields.io/npm/v/binpackingjs.svg?style=flat)](https://npmjs.org/package/binpackingjs "View this project on npm")
@@ -14,11 +13,11 @@ binpackingjs is 2D, 3D, 4D well tested JavaScript Bin Packing library.
 
 `yarn add binpackingjs`
 
-## 2D Bin Packing
+## Bin Packing
 
-[2D Bin Packing Demo](https://codesandbox.io/s/XVJnv7Yg)
+[Bin Packing Demo](https://codesandbox.io/s/XVJnv7Yg)
 
-[![2D Bin Packing](/screenshot.png)](https://codesandbox.io/s/XVJnv7Yg)
+[![Bin Packing](/screenshot.png)](https://codesandbox.io/s/XVJnv7Yg)
 
 ```
 const BinPacking2D = require('binpackingjs').BP2D;

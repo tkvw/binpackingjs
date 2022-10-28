@@ -1,26 +1,28 @@
-import Score from './Score';
-import ScoreBoard from './ScoreBoard';
+import Bin from "./Bin";
+import Box from "./Box";
+import Score from "./Score";
+import ScoreBoard from "./ScoreBoard";
+import ScoreBoardEntry from "./ScoreBoardEntry";
 
 export default class Packer {
+  bins: Bin[];
+  unpackedBoxes: Box[] = [];
 
-  bins = [];
-  unpackedBoxes = [];
-
-  constructor(bins) {
+  constructor(bins: Bin[] = []) {
     this.bins = bins;
   }
 
-  pack(boxes, options = {}) {
-    let packedBoxes = [];
-    let entry;
-    
+  pack(boxes: Box[], { limit = Score.MAX_INT }: { limit?: number } = {}) {
+    let packedBoxes: Box[] = [];
+    let entry: ScoreBoardEntry | undefined;
+
     boxes = boxes.filter((box) => !box.packed);
     if (boxes.length === 0) return packedBoxes;
 
-    let limit = options.limit || Score.MAX_INT;
     let board = new ScoreBoard(this.bins, boxes);
-    let r = 0;
-    while(entry = board.bestFit()) {
+    while ((entry = board.bestFit())) {
+      if (!entry) continue;
+
       entry.bin.insert(entry.box);
       board.removeBox(entry.box);
       board.recalculateBin(entry.bin);
@@ -28,7 +30,7 @@ export default class Packer {
       if (packedBoxes.length >= limit) {
         break;
       }
-    };
+    }
 
     this.unpackedBoxes = boxes.filter((box) => {
       return !box.packed;
@@ -36,5 +38,4 @@ export default class Packer {
 
     return packedBoxes;
   }
-
 }
