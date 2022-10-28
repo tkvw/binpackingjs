@@ -1,22 +1,25 @@
 {
   "name": "@tkvw/binpackingts",
-  "version": "3.0.2",
-  "description": "2D, 3D, 4D Bin Packing",
+  "version": "4.0.0",
+  "description": "2D Bin Packing",
   "repository": {
     "type": "git",
     "url": "https://github.com/tkvw/binpackingts"
   },
   "module": "index.js",
   "scripts": {
-    "build": "webpack && BUILD_MINIFY=1 webpack",
-    "dev": "webpack --progress --colors --watch",
+    "build": "tsc",
+    "dev": "tsc --watch",
     "test": "mocha --require ts-node/register ./test/*.ts",
-    "test-dev": "mocha --watch ./test/*.js"
+    "test-dev": "mocha --watch --require ts-node/register ./test/*.ts"
   },
   "browserslist": [
     "defaults"
   ],
   "author": "Long Nguyen",
+  "contributors": [
+    "Dennie de Lange (https://github.com/tkvw)"
+  ],
   "license": "MIT",
   "devDependencies": {
     "mocha": "^8.3.0",

@@ -27,7 +27,7 @@ export default abstract class Base implements Heuristic {
     box: Box,
     rectWidth: number,
     rectHeight: number,
-    bestScore
+    bestScore: Score
   ) {
     if (freeRect.width >= rectWidth && freeRect.height >= rectHeight) {
       let score = this.calculateScore(freeRect, rectWidth, rectHeight);

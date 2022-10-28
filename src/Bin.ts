@@ -8,12 +8,27 @@ export default class Bin {
   boxes: Box[] = [];
   heuristic: Heuristic;
   freeRectangles: Rect[] = [];
+  private used: number = 1;
+  stock: number = 1;
+  greedyPriority: number = 1;
 
   constructor(width: number, height: number, heuristic?: Heuristic) {
     this.width = width;
     this.height = height;
     this.freeRectangles = [{ width, height, x: 0, y: 0 }];
     this.heuristic = heuristic || new BestShortSideFit();
+  }
+  setStock(stock: number) {
+    this.stock = stock;
+    return this;
+  }
+
+  next() {
+    this.used++;
+    return new Bin(this.width, this.height, this.heuristic);
+  }
+  get isInStock(): boolean {
+    return this.used < this.stock;
   }
 
   get area(): number {
@@ -32,7 +47,7 @@ export default class Bin {
     return `${this.width}x${this.height} ${this.efficiency}%`;
   }
 
-  insert(box) {
+  insert(box: Box) {
     if (box.packed) return false;
 
     this.heuristic.findPositionForNewNode(box, this.freeRectangles);

@@ -22,10 +22,6 @@ export default class ScoreBoard {
     }
   }
 
-  any() {
-    return this.boxes.some((box) => box);
-  }
-
   largestNotFitingBox() {
     let unfit: ScoreBoardEntry | undefined;
     const fittingBoxes = this.entries

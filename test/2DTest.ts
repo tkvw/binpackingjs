@@ -47,17 +47,18 @@ describe("bp2d.js", function () {
   describe("Packer", function () {
     it("does nothing when no bin and no box passed", function () {
       let packer = new Packer();
-      assert.equal(JSON.stringify(packer.pack([])), JSON.stringify([]));
+      const { packedBoxes } = packer.pack([], []);
+      assert.equal(JSON.stringify(packedBoxes), JSON.stringify([]));
     });
 
     it("puts single box in single bin", function () {
       let { binOfSize1 } = newBins();
 
       let box = new Box(9000, 3000);
-      let packer = new Packer([binOfSize1]);
-      let result = packer.pack([box]);
+      let packer = new Packer();
+      let { packedBoxes } = packer.pack([binOfSize1], [box]);
 
-      assert.equal(JSON.stringify(result), JSON.stringify([box]));
+      assert.equal(JSON.stringify(packedBoxes), JSON.stringify([box]));
       assert.equal(binOfSize1.boxes.length, 1);
       assert.equal(box.width, 9000);
       assert.equal(box.height, 3000);
@@ -69,10 +70,10 @@ describe("bp2d.js", function () {
     it("puts rotated box in single bin", function () {
       let { binOfSize1 } = newBins();
       let box = new Box(1000, 9000);
-      let packer = new Packer([binOfSize1]);
-      let result = packer.pack([box]);
+      let packer = new Packer();
+      let { packedBoxes } = packer.pack([binOfSize1], [box]);
 
-      assert.equal(result.length, 1);
+      assert.equal(packedBoxes.length, 1);
       assert.equal(binOfSize1.boxes.length, 1);
       assert.equal(box.width, 9000);
       assert.equal(box.height, 1000);
@@ -84,10 +85,13 @@ describe("bp2d.js", function () {
     it("puts large box in large bin", function () {
       let { binOfSize1, binOfSize2, binOfSize3 } = newBins();
       let box = new Box(11000, 2000);
-      let packer = new Packer([binOfSize1, binOfSize2, binOfSize3]);
-      let result = packer.pack([box]);
+      let packer = new Packer();
+      let { packedBoxes } = packer.pack(
+        [binOfSize1, binOfSize2, binOfSize3],
+        [box]
+      );
 
-      assert.equal(result.length, 1);
+      assert.equal(packedBoxes.length, 1);
       assert.equal(binOfSize1.boxes.length, 0);
       assert.equal(binOfSize2.boxes.length, 0);
       assert.equal(binOfSize3.boxes.length, 1);
@@ -100,10 +104,10 @@ describe("bp2d.js", function () {
       let { binOfSize1 } = newBins();
       let box_1 = new Box(8000, 1500);
       let box_2 = new Box(1000, 9000);
-      let packer = new Packer([binOfSize1]);
-      let result = packer.pack([box_1, box_2]);
+      let packer = new Packer();
+      let { packedBoxes } = packer.pack([binOfSize1], [box_1, box_2]);
 
-      assert.equal(result.length, 2);
+      assert.equal(packedBoxes.length, 2);
       assert.equal(binOfSize1.boxes.length, 2);
     });
 
@@ -112,10 +116,10 @@ describe("bp2d.js", function () {
       let bin_2 = new Bin(9600, 3100);
       let box_1 = new Box(5500, 2000);
       let box_2 = new Box(5000, 2000);
-      let packer = new Packer([bin_1, bin_2]);
-      let result = packer.pack([box_1, box_2]);
+      let packer = new Packer();
+      let { packedBoxes } = packer.pack([bin_1, bin_2], [box_1, box_2]);
 
-      assert.equal(result.length, 2);
+      assert.equal(packedBoxes.length, 2);
       assert.equal(bin_1.boxes.length, 1);
       assert.equal(bin_2.boxes.length, 1);
     });
@@ -123,10 +127,10 @@ describe("bp2d.js", function () {
     it("does not put in bin too large box", function () {
       let { binOfSize1 } = newBins();
       let box = new Box(10000, 10);
-      let packer = new Packer([binOfSize1]);
-      let result = packer.pack([box]);
+      let packer = new Packer();
+      let { packedBoxes } = packer.pack([binOfSize1], [box]);
 
-      assert.equal(result.length, 0);
+      assert.equal(packedBoxes.length, 0);
       assert.equal(binOfSize1.boxes.length, 0);
       assert.equal(box.packed, false);
     });
@@ -137,10 +141,10 @@ describe("bp2d.js", function () {
       let box_2 = new Box(4000, 3000);
       let box_3 = new Box(4000, 3000);
       let boxes = [box_1, box_2, box_3];
-      let packer = new Packer([binOfSize1]);
-      let result = packer.pack(boxes);
+      let packer = new Packer();
+      let { packedBoxes } = packer.pack([binOfSize1], boxes);
 
-      assert.equal(result.length, 2);
+      assert.equal(packedBoxes.length, 2);
       assert.equal(binOfSize1.boxes.length, 2);
       assert.equal(boxes.length, 3);
       assert.equal(boxes.filter((box) => box.packed).length, 2);
@@ -151,10 +155,13 @@ describe("bp2d.js", function () {
       let box_1 = new Box(1000, 1000);
       let box_2 = new Box(1000, 1000);
       let boxes = [box_1, box_2];
-      let packer = new Packer([binOfSize1]);
-      let result = packer.pack(boxes, { limit: 1 });
+      let packer = new Packer();
+      let { packedBoxes, unpackedBoxes } = packer.pack([binOfSize1], boxes, {
+        limit: 1,
+      });
 
-      assert.equal(result.length, 1);
+      assert.equal(packedBoxes.length, 1);
+      assert.equal(unpackedBoxes.length, 1);
       assert.equal(binOfSize1.boxes.length, 1);
       assert.equal(boxes.length, 2);
       assert.equal(boxes.filter((box) => box.packed).length, 1);
@@ -163,10 +170,10 @@ describe("bp2d.js", function () {
     it("does not pack box twice", function () {
       let { binOfSize1 } = newBins();
       let box_1 = new Box(1000, 9000);
-      let packer = new Packer([binOfSize1]);
+      let packer = new Packer();
 
-      assert.equal(packer.pack([box_1]).length, 1);
-      assert.equal(packer.pack([box_1]).length, 0);
+      assert.equal(packer.pack([binOfSize1], [box_1]).packedBoxes.length, 1);
+      assert.equal(packer.pack([binOfSize1], [box_1]).packedBoxes.length, 0);
     });
 
     it("puts multiple boxes into multiple bins", function () {
@@ -178,10 +185,10 @@ describe("bp2d.js", function () {
         new Box(40, 40),
         new Box(200, 200), // Too large to fit
       ];
-      let packer = new Packer([bin_1, bin_2]);
-      let packed_boxes = packer.pack(boxes);
+      let packer = new Packer();
+      let { packedBoxes } = packer.pack([bin_1, bin_2], boxes);
 
-      assert.equal(packed_boxes.length, 3);
+      assert.equal(packedBoxes.length, 3);
       assert.equal(bin_1.boxes.length, 2);
       assert.equal(bin_1.boxes[0].label, "40x40 at [0,0]");
       assert.equal(bin_1.boxes[1].label, "15x10 at [0,40]");
@@ -199,10 +206,10 @@ describe("bp2d.js", function () {
         new Box(1 / 4, 1 / 4),
         new Box(1 / 2, 1 / 2), // Too large to fit
       ];
-      let packer = new Packer([bin_1, bin_2]);
-      let packed_boxes = packer.pack(boxes);
+      let packer = new Packer();
+      let { packedBoxes } = packer.pack([bin_1, bin_2], boxes);
 
-      assert.equal(packed_boxes.length, 4);
+      assert.equal(packedBoxes.length, 4);
     });
 
     it("Contrain rotation on boxes", function () {
@@ -211,11 +218,23 @@ describe("bp2d.js", function () {
         new Box(50, 100, true), // Constrained, so should not be packed
         new Box(50, 100), // Not constrained, so should be packed
       ];
-      let packer = new Packer([bin_1]);
-      let packed_boxes = packer.pack(boxes);
+      let packer = new Packer();
+      let { packedBoxes } = packer.pack([bin_1], boxes);
 
-      assert.equal(packed_boxes.length, 1);
+      assert.equal(packedBoxes.length, 1);
       assert.equal(boxes[0].packed, false, "First box should not be packed");
+      assert.equal(boxes[1].packed, true, "Second box should not be packed");
+    });
+
+    it("Adds more bins if allowed", function () {
+      let bin_1 = new Bin(100, 50).setStock(4);
+      let boxes = [new Box(50, 100), new Box(50, 70)];
+      let packer = new Packer();
+      let { packedBoxes, bins } = packer.pack([bin_1], boxes);
+
+      assert.equal(packedBoxes.length, 2);
+      assert.equal(bins.length, 2, "Two bins should be used");
+      assert.equal(boxes[0].packed, true, "First box should be packed");
       assert.equal(boxes[1].packed, true, "Second box should not be packed");
     });
   });
